@@ -8,15 +8,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
 
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Scriptable;
-
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     MaterialButton edtso0,edtso1,edtso2,edtso3,edtso4,edtso5,edtso6,edtso7,edtso8,edtso9;
     MaterialButton buttonC, buttonAC, buttonResult, buttonPlus, buttonDevision, buttonSub, buttonMul, buttonDot, buttonPercent;
     TextView resultTv, solutionTv;
+    private String currentNumber = "";
+    private String currentOperation = "";
+    private double result = 0.0;
 
-    boolean crunchifyAddition, mSubtract, crunchifyMultiplication, crunchifyDivision;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,27 +58,90 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         MaterialButton btn = (MaterialButton) view;
         String buttonText = btn.getText().toString();
         String dataToCalculate = solutionTv.getText().toString();
-
+        String resultRecently = resultTv.getText().toString();
 
         if (buttonText.equals("C")){
             solutionTv.setText("");
-        }
-        if(buttonText.equals("=")){
-            solutionTv.setText(resultTv.getText());
+            resultTv.setText("0");
+            currentNumber="";
+            currentOperation="";
+
             return;
+
+        }
+        if(isOperation(buttonText)){
+            // Tiếp tục thực hiện phép tính dựa trên kết quả trước đó
+            if(!resultRecently.equals("")){
+                dataToCalculate = resultRecently;
+                solutionTv.setText(resultRecently);
+                resultTv.setText("0");
+            }
+            if (!currentNumber.equals("")) {
+                if (!currentOperation.equals("")) {
+                    calculate();
+                    currentNumber=(String.valueOf(result));
+                }
+                result = Double.parseDouble(currentNumber);
+                currentNumber = "";
+                currentOperation = buttonText;
+            }
+        }
+        if(isNumeric(buttonText.charAt(0))) {
+            currentNumber +=buttonText;
         }
 
+        if(buttonText.equals("=")){
+            calculate();
+            resultTv.setText(String.valueOf(result));
+            return;
+        }
         else {
             dataToCalculate += buttonText;
         }
         solutionTv.setText(dataToCalculate);
-        String finalResult = getResult(dataToCalculate);
+       /* String finalResult = getResult(dataToCalculate);
 
         if(!finalResult.equals("Err")){
             resultTv.setText(finalResult);
+        }*/
+    }
+
+    boolean isOperation (String operation){
+        if (operation.equals("+")|| operation.equals("-")|| operation.equals("/")||operation.equals("x")){
+            return true;
+        }
+        return false;
+    }
+
+    private void calculate() {
+        if (!currentOperation.equals("") && !currentNumber.equals("")) {
+            double operand = Double.parseDouble(currentNumber);
+            if (currentOperation.equals("+")) {
+                result += operand;
+            } else if (currentOperation.equals("-")) {
+                result -= operand;
+            } else if (currentOperation.equals("*")) {
+                result *= operand;
+            } else if (currentOperation.equals("/")) {
+                result /= operand;
+            }
+            currentNumber = "";
+            currentOperation = "";
         }
     }
 
+    private boolean isNumeric(char c)
+    {
+        if((c <= '9' && c >= '0') || c == '.')
+            return true;
+        return false;
+    }
+
+
+
+
+
+/* Cách theo bài hướng dẫn Youtube ban đầu
     String getResult(String data){
 
         try{
@@ -94,5 +156,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }catch (Exception e){
             return "Err";
         }
-    }
+    }*/
 }
