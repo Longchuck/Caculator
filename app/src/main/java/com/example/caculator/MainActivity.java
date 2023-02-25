@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (buttonText.equals("C")){
             solutionTv.setText("");
-            resultTv.setText("0");
+            resultTv.setText("");
             currentNumber="";
             currentOperation="";
 
