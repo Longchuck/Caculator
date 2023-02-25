@@ -67,12 +67,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             currentOperation="";
 
             return;
-
         }
         if(isOperation(buttonText)){
             // Tiếp tục thực hiện phép tính dựa trên kết quả trước đó
             if(!resultRecently.equals("")){
                 dataToCalculate = resultRecently;
+                currentOperation = buttonText;
                 solutionTv.setText(resultRecently);
                 resultTv.setText("0");
             }
@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 result += operand;
             } else if (currentOperation.equals("-")) {
                 result -= operand;
-            } else if (currentOperation.equals("*")) {
+            } else if (currentOperation.equals("x")) {
                 result *= operand;
             } else if (currentOperation.equals("/")) {
                 result /= operand;
