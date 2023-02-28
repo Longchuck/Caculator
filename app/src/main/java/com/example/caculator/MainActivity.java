@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String dataToCalculate = solutionTv.getText().toString();
 //        String resultRecently = resultTv.getText().toString();
 
+
         if (buttonText.equals("C")){
             solutionTv.setText("");
             resultTv.setText("");
@@ -81,16 +82,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         if(buttonText.equals("=")){
-            Expression expression = new ExpressionBuilder(dataToCalculate).build();
-            double result = expression.evaluate();
-            resultTv.setText(String.valueOf(result));
-            if (result == (int) result) {
-                // If result is an integer, display it as integer
-                resultTv.setText(Integer.toString((int) result));
-            } else {
-                // If result is a decimal, display it as a decimal
-                resultTv.setText(Double.toString(result));
+            try {
+                Expression expression = new ExpressionBuilder(dataToCalculate).build();
+                double result = expression.evaluate();
+                resultTv.setText(String.valueOf(result));
+                if (result == (int) result) {
+                    // If result is an integer, display it as integer
+                    resultTv.setText(Integer.toString((int) result));
+                } else {
+                    // If result is a decimal, display it as a decimal
+                    resultTv.setText(Double.toString(result));
+                }
+            }catch (Exception ex){
+                resultTv.setText("Err");
             }
+
         }
         else {
             dataToCalculate += buttonText;
