@@ -8,12 +8,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
 
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
+
+import java.util.Stack;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     MaterialButton edtso0,edtso1,edtso2,edtso3,edtso4,edtso5,edtso6,edtso7,edtso8,edtso9;
     MaterialButton buttonC, buttonAC, buttonResult, buttonPlus, buttonDevision, buttonSub, buttonMul, buttonDot, buttonPercent;
     TextView resultTv, solutionTv;
     private String currentNumber = "";
-    private String currentOperation = "";
+    private Stack<String> currentOperation = new Stack<>();
     private double result = 0.0;
 
 
@@ -58,84 +63,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         MaterialButton btn = (MaterialButton) view;
         String buttonText = btn.getText().toString();
         String dataToCalculate = solutionTv.getText().toString();
-        String resultRecently = resultTv.getText().toString();
+//        String resultRecently = resultTv.getText().toString();
 
         if (buttonText.equals("C")){
             solutionTv.setText("");
             resultTv.setText("");
-            currentNumber="";
-            currentOperation="";
 
             return;
         }
-        if(isOperation(buttonText)){
-            // Tiếp tục thực hiện phép tính dựa trên kết quả trước đó
-            if(!resultRecently.equals("")){
-                dataToCalculate = resultRecently;
-                currentOperation = buttonText;
-                solutionTv.setText(resultRecently);
-                resultTv.setText("0");
+        if (buttonText.equals("AC")){
+            if (!dataToCalculate.equals("")) {
+                solutionTv.setText(dataToCalculate.substring(0, dataToCalculate.length() - 1));
+                return;
             }
-            if (!currentNumber.equals("")) {
-                if (!currentOperation.equals("")) {
-                    calculate();
-                    currentNumber=(String.valueOf(result));
-                }
-                result = Double.parseDouble(currentNumber);
-                currentNumber = "";
-                currentOperation = buttonText;
-            }
+            solutionTv.setText("");
+            resultTv.setText("");
+            return;
         }
-        if(isNumeric(buttonText.charAt(0))) {
-            currentNumber +=buttonText;
-        }
-
         if(buttonText.equals("=")){
-            calculate();
+            Expression expression = new ExpressionBuilder(dataToCalculate).build();
+            double result = expression.evaluate();
             resultTv.setText(String.valueOf(result));
-            return;
+            if (result == (int) result) {
+                // If result is an integer, display it as integer
+                resultTv.setText(Integer.toString((int) result));
+            } else {
+                // If result is a decimal, display it as a decimal
+                resultTv.setText(Double.toString(result));
+            }
         }
         else {
             dataToCalculate += buttonText;
         }
         solutionTv.setText(dataToCalculate);
-       /* String finalResult = getResult(dataToCalculate);
 
-        if(!finalResult.equals("Err")){
-            resultTv.setText(finalResult);
-        }*/
     }
 
-    boolean isOperation (String operation){
-        if (operation.equals("+")|| operation.equals("-")|| operation.equals("/")||operation.equals("x")){
-            return true;
-        }
-        return false;
-    }
 
-    private void calculate() {
-        if (!currentOperation.equals("") && !currentNumber.equals("")) {
-            double operand = Double.parseDouble(currentNumber);
-            if (currentOperation.equals("+")) {
-                result += operand;
-            } else if (currentOperation.equals("-")) {
-                result -= operand;
-            } else if (currentOperation.equals("x")) {
-                result *= operand;
-            } else if (currentOperation.equals("/")) {
-                result /= operand;
-            }
-            currentNumber = "";
-            currentOperation = "";
-        }
-    }
-
-    private boolean isNumeric(char c)
-    {
-        if((c <= '9' && c >= '0') || c == '.')
-            return true;
-        return false;
-    }
 
 
 

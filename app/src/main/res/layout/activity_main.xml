@@ -291,7 +291,7 @@
                 android:layout_height="72dp"
                 android:layout_margin="12dp"
                 android:backgroundTint="#4C4A49"
-                android:text=","
+                android:text="."
                 android:textColor="@color/white"
                 android:textSize="32dp"
                 app:cornerRadius="36dp" />
