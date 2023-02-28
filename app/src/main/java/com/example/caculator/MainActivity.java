@@ -11,14 +11,12 @@ import com.google.android.material.button.MaterialButton;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
-import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     MaterialButton edtso0,edtso1,edtso2,edtso3,edtso4,edtso5,edtso6,edtso7,edtso8,edtso9;
     MaterialButton buttonC, buttonAC, buttonResult, buttonPlus, buttonDevision, buttonSub, buttonMul, buttonDot, buttonPercent;
     TextView resultTv, solutionTv;
     private String currentNumber = "";
-    private Stack<String> currentOperation = new Stack<>();
     private double result = 0.0;
 
 
@@ -40,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         assignId(edtso8,R.id.btn_8);
         assignId(edtso9,R.id.btn_9);
         assignId(buttonDot,R.id.btn_dot);
-
         assignId(buttonC,R.id.btn_C);
         assignId(buttonAC,R.id.btn_back);
         assignId(buttonResult,R.id.btn_result);
@@ -49,14 +46,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         assignId(buttonSub,R.id.btn_sub);
         assignId(buttonMul,R.id.btn_multi);
         assignId(buttonPercent,R.id.btn_percent);
-
-
     }
     void assignId(MaterialButton  btn, int id){
         btn = findViewById(id);
         btn.setOnClickListener((View.OnClickListener)this);
     }
-
 
     @Override
     public void onClick(View view) {
@@ -68,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (buttonText.equals("C")){
             solutionTv.setText("");
             resultTv.setText("");
-
             return;
         }
         if (buttonText.equals("AC")){
@@ -81,22 +74,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         if(buttonText.equals("=")){
-            Expression expression = new ExpressionBuilder(dataToCalculate).build();
-            double result = expression.evaluate();
-            resultTv.setText(String.valueOf(result));
-            if (result == (int) result) {
-                // If result is an integer, display it as integer
-                resultTv.setText(Integer.toString((int) result));
-            } else {
-                // If result is a decimal, display it as a decimal
-                resultTv.setText(Double.toString(result));
+            try {
+                Expression expression = new ExpressionBuilder(dataToCalculate).build();
+                double result = expression.evaluate();
+                resultTv.setText(String.valueOf(result));
+                if (result == (int) result) {
+                    // If result is an integer, display it as integer
+                    resultTv.setText(Integer.toString((int) result));
+                } else {
+                    // If result is a decimal, display it as a decimal
+                    resultTv.setText(Double.toString(result));
+                }
+            }catch (Exception e){
+                resultTv.setText("Error");
             }
+
         }
         else {
             dataToCalculate += buttonText;
         }
         solutionTv.setText(dataToCalculate);
-
     }
 
 
